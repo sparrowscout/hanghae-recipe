@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+    <head>
+
+        <!-- Webpage Title -->
+        <title>Hello, world!</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <style>
+            .login-body{
+                width: 50%;
+                max-width:400px;
+                margin: auto;
+            }
+
+            .loginInfo_text{
+                width:50px;
+                height:38px;
+                margin-right:15px;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+
+            }
+            .btn-area{
+                display: flex;
+                flex-direction: column;
+                font-size: 20px;
+                padding-top: 30px;
+            }
+            .btn-area button{
+                height:auto;
+                padding: 15px 0;
+                border:none;
+                background-color:#F96F22;
+                font-weight: bold;
+                color:#fff;
+                font-size: 20px;
+                border-radius: 3px;
+                margin-bottom: 15px;
+                cursor:pointer;
+
+            }
+            .btn-area a {
+                border: 1px solid #F96F22;
+                color: #F96F22;
+                padding: 15px 0;
+                border-radius: 3px;
+            }
+        </style>
+
+        <script>
+            // 간단한 회원가입 함수입니다.
+            // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
+            function register() {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/register",
+                    data: {
+                        id_give: $('#id').val(),
+                        pw_give: $('#pw').val()
+                    },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('회원가입이 완료되었습니다.')
+                            window.location.href = '/login'
+                        } else {
+                            alert(response['msg'])
+                        }
+                    }
+                })
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class="section has-text-centered login-body">
+            <h1 class="title">회원가입</h1>
+            <div class="container">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal loginInfo_text">
+                        <label class="label" for="userid">ID</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="text" class="input" id="id" aria-describedby="emailHelp"
+                                       placeholder="My ID">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal loginInfo_text
+">
+                        <label class="label" for="userpw">PW</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="password" class="input" id="pw" placeholder="My Password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-area">
+                    <button class="" onclick="register()">회원가입</button>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
