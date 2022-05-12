@@ -1,47 +1,322 @@
-<!DOCTYPE html>
-<html lang="kr">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="HangHae Recipe - 항해 레시피"/>
+    <meta property="og:description" content="건강한 항해 완주를 위한 레시피"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+
+    <!-- Webpage Title -->
+    <title>HangHae Recipe</title>
+
+
+
+    {#    파일 업로드 라이브러리 (부트스트랩)#}
+    {#    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>#}
+
+    {#    Google font#}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&family=Poppins:wght@300&display=swap"
+          rel="stylesheet">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {#    <!-- Bulma CSS -->#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    {#    CSS 링크 (bulma CSS보다 아래에 있어야함. 벌마가 먼저 정의하고, 그걸 수정하는 방향으로 가야하기 때문#}
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
+    {#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"#}
+    {#            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"#}
+    {#            crossorigin="anonymous"></script>#}
 
-    <title>My page</title>
+
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            get_posts()
+        })
+
+    </script>
+
     <style>
-        .header {
-            margin: 20px 20px 40px;
-            /*background-color: gray;*/
+        @media screen and (max-width: 768px) {
+            .container .titleArea {
+                display: block !important;
+            }
         }
 
-        .contents {
-            width: 500px;
-            height: 800px;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: greenyellow;
+        body {
+            padding-top: 100px;
         }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav.header {
+            height: 80px;
+            width: 100%;
+            background-color: #F96F22;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+
+        nav.header a {
+            color: #fff !important;
+            text-decoration: none
+        }
+
+        nav.header .headerCon {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 80px;
+            align-items: center;
+            width: 100%;
+            max-width: 1344px;
+            padding: 0 20px;
+            margin: auto;
+
+        }
+
+        nav.header .headerCon .menuBox {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        nav.header .headerCon .menuBox li:first-child {
+            margin-right: 10px;
+        }
+
+        .container .titleArea {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2vh;
+            margin-bottom: 20px;
+        }
+
+        .container .titleArea .mainTitle {
+            font-size: 3vh;
+            margin: 0;
+            color: gray;
+        }
+
+        .container .titleArea .mainTitle span {
+            font-weight: bold;
+            color: #f96f22;
+        }
+
+        a.share {
+            display: block;
+            border: 1px solid #f96f22;
+            padding: 15px;
+            color: #f96f22;
+            text-decoration: none;
+        }
+
+        h5.card-title a {
+            font-size: 2rem;
+            font-weight: bold;
+
+        }
+
+        .card-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        #recipes{width: 100%; max-width:1300px; margin: auto;}
+
     </style>
+
 </head>
 <body>
 
-<div class="header">
-    {{id}}님의 마이페이지
-    <a href="/" style="float: right; margin-left: 15px">로그아웃</a>
+<nav class="header">
+    <div class="headerCon">
+        <div class="logoBox">
+            <a href="/"><img src="../static/logo2.svg" alt=""></a>
+        </div>
+        <ul class="menuBox">
+            <li><a href="/mypage/{{ user_info.id }}"> 마이페이지</a></li>
+            <li><a onclick="logout()">로그아웃</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<div id="recipes" class="is-hidden">
+    <div class="field">
+        <label class="label">레시피 제목</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="ex) 냉털 떡볶이 만들기" id="title">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">재료</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="레시피에 들어가는 재료" id="ingred">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">레시피 내용</label>
+        <div class="control">
+            <textarea class="textarea" placeholder="레시피 내용" id="content"></textarea>
+
+        </div>
+
+
+    </div>
+    <div class="field">
+        <div id="file-js-example" class="file has-name is-fullwidth">
+
+            <label class="file-label">
+                <input class="file-input" type="file" name="resume" id="file">
+                <span class="file-cta">
+
+      <span class="file-label">
+        이미지 첨부
+      </span>
+    </span>
+                <span class="file-name">
+      No file uploaded
+    </span>
+            </label>
+        </div>
+    </div>
+
+
+    <script>
+        const fileInput = document.querySelector('#file-js-example input[type=file]');
+        fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+                const fileName = document.querySelector('#file-js-example .file-name');
+                fileName.textContent = fileInput.files[0].name;
+            }
+        }
+    </script>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-warning is-outlined" onclick="posting_recipe()">
+                <span>레시피 작성!</span>
+            </button>
+            <button class="button is-warning is-outlined" onclick='$("#recipes").addClass("is-hidden")'>
+                <span>닫기</span>
+            </button>
+        </div>
+    </div>
+
 </div>
-<div class="contents">
-<h3>항해 중인 {{id}}</h3>
-    <p>id : {{id}}</p>
-    <p>pw : {{pw}}</p>
-    <p>mail : {{mail}}</p>
-   <p>성별 : {{sex}}</p>
+
+
+{#레시피 카드 부분#}
+<div class="container">
+    <div class="titleArea">
+        <p class="mainTitle"><span>{{ id }}</span>님의 건강한 항해를 위한 레시피</p>
+        <a class="share" onclick='$("#recipes").removeClass("is-hidden")'>레시피 공유하기</a>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="recipe-cards">
+    </div>
+    {#    모달 부분#}
+    <div class="modal" id="modal-post">
+        <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+        <div class="modal-content">
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+
+                        <section class="section">
+                            <div id="post-box" class="container">
+                                <div class="box">
+                                    <article class="media">
+                                        <div class="media-left">
+                                            <a class="image is-64x64" href="#">
+                                                <img class="is-rounded"
+                                                     src={{ url_for("static", filename="profile_pics/profile_placeholder.png") }}>
+                                            </a>
+                                        </div>
+
+                                        <div class="media-content">
+                                            <div class="content">
+                                                <p>
+                                                    <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
+                                                    <br>
+                                                    글을 적는 칸
+                                                </p>
+                                            </div>
+
+                                            <nav class="level is-mobile">
+                                                <div class="level-left">
+                                                    <a class="level-item is-sparta" aria-label="heart"
+                                                       onclick="toggle_like('', 'heart')">
+                                                        <span class="icon is-small"><i class="fa fa-heart"
+                                                                                       aria-hidden="true"></i></span>&nbsp;<span
+                                                            class="like-num">2.7k</span>
+                                                    </a>
+                                                </div>
+                                            </nav>
+                                        </div>
+                                    </article>
+                                </div>
+
+                            </div>
+                        </section>
+
+
+                        {#                        test area 부분#}
+                        <div class="field">
+                            <p class="control">
+                                        <textarea id="textarea-post" class="textarea"
+                                                  placeholder="무슨 생각을 하고 계신가요?"></textarea>
+                            </p>
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <a class="button is-sparta" onclick="post()">포스팅하기</a>
+                                </div>
+                                <div class="level-item">
+                                    <a class="button is-sparta is-outlined"
+                                       onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-post").removeClass("is-active")'></button>
+    </div>
 </div>
 </body>
 </html>
